@@ -1,5 +1,101 @@
+#+TITLE: ob-csharp
+#+DATE:    August 22, 2020
 
-* Tests
-#+BEGIN_SRC csharp
-Console.WriteLine("Hello");
+* Table of Contents :TOC_3:noexport:
+- [[#description][Description]]
+  - [[#code][Code]]
+- [[#prerequisites][Prerequisites]]
+- [[#features][Features]]
+  - [[#basic-hello-world][Basic Hello World]]
+  - [[#creating-classes][Creating classes]]
+  - [[#output-as-a-table][Output as a table]]
+
+* Description
+This is a small org-babel plugin that utilises dotnet to execute c# block
+
++ @samwdp (Author)
+
+** Code
+#+BEGIN_SRC emacs-lisp :tangle ob-csharp.el
+;;; ob-cshrp.el --- org-babel functions for csharp evaluation
+
+;;; Commentary:
+;;
+;; org-babel functions for rust evaluation
+;;
+
+;;; Code:
+(require 'ob)
+(require 'csharp-mode)
+
+(add-to-list 'org-babel-tangle-lang-exts '("csharp" . "cs"))
+
+(defvar org-babel-default-header-args:csharp '())
+
+(defun ob-csharp--build-script-run-command (path)
+  "Create run command according to the PATH."
+  (format "dotnet script %s" path))
+
+(defun org-babel-execute:csharp (body params)
+  (let* ((processed-params (org-babel-process-params params))
+         (src-temp (org-babel-temp-file "csharp-src-")))
+    (with-temp-file src-temp (insert body))
+    (let ((results (org-babel-eval (ob-csharp--build-script-run-command src-temp) "")))
+      (org-babel-reassemble-table
+       (org-babel-result-cond (cdr (assoc :result-params params))
+         (org-babel-read results)
+         (let ((tmp-file (org-babel-temp-file "c-")))
+           (with-temp-file tmp-file (insert results))
+           (org-babel-import-elisp-from-file tmp-file)))
+       (org-babel-pick-name
+        (cdr (assoc :colname-names params)) (cdr (assoc :colnames params)))
+       (org-babel-pick-name
+        (cdr (assoc :rowname-names params)) (cdr (assoc :rownames params)))))))
+
+(provide 'ob-csharp)
+;;; ob-csharp.el ends here
 #+END_SRC
+* Prerequisites
++ dotnet core/5 installed (or any future versions that utilise the dotnet command)
++ install dotnet-script
+ #+BEGIN_SRC sh
+dotnet tool install -g dotnet-script
+ #+END_SRC
+
+* Features
+** Basic Hello World
+#+BEGIN_SRC csharp
+Console.WriteLine("Hello World");
+#+END_SRC
+
+#+RESULTS:
+: Hello World
+
+** Creating classes
+#+BEGIN_SRC csharp :results verbatim
+public class Calculator
+{
+   public static int Add(int a, int b) =>
+       a + b;
+}
+
+var a = Calculator.Add(1,2);
+Console.WriteLine(a);
+
+#+END_SRC
+
+#+RESULTS:
+: 3
+
+** Output as a table
+#+BEGIN_SRC csharp
+for (char  c = 'a'; c < 'd'; c++)
+      System.Console.Write("{0} ",c);
+    System.Console.WriteLine();
+    for (int i = 0; i < 3; i++)
+      System.Console.Write("{0} ",i);
+#+END_SRC
+
+#+RESULTS:
+| a | b | c |
+| 0 | 1 | 2 |
