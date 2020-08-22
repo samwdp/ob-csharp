@@ -5,6 +5,8 @@
 - [[#description][Description]]
   - [[#code][Code]]
 - [[#prerequisites][Prerequisites]]
+- [[#installation][Installation]]
+  - [[#doom-emacs-my-preffered-distribution][Doom Emacs (my preffered distribution)]]
 - [[#features][Features]]
   - [[#basic-hello-world][Basic Hello World]]
   - [[#creating-classes][Creating classes]]
@@ -55,16 +57,31 @@ This is a small org-babel plugin that utilises dotnet to execute c# block
 (provide 'ob-csharp)
 ;;; ob-csharp.el ends here
 #+END_SRC
+
+#+RESULTS:
+: ob-csharp
+
 * Prerequisites
 + dotnet core/5 installed (or any future versions that utilise the dotnet command)
 + install dotnet-script
- #+BEGIN_SRC sh
+ #+BEGIN_SRC powershell
 dotnet tool install -g dotnet-script
+ #+END_SRC
+
+* Installation
+** Doom Emacs (my preffered distribution)
++ packages.el
+ #+BEGIN_SRC emacs-lisp
+(package! ob-csharp :recipe (:host github :repo "samwdp/ob-csharp"))
+ #+END_SRC
++ config.el
+ #+BEGIN_SRC emacs-lisp
+(org-babel-do-load-languages 'org-babel-load-languages '((csharp . t)))
  #+END_SRC
 
 * Features
 ** Basic Hello World
-#+BEGIN_SRC csharp
+#+BEGIN_SRC csharp :exports both
 Console.WriteLine("Hello World");
 #+END_SRC
 
@@ -72,7 +89,7 @@ Console.WriteLine("Hello World");
 : Hello World
 
 ** Creating classes
-#+BEGIN_SRC csharp :results verbatim
+#+BEGIN_SRC csharp :results verbatim :exports both
 public class Calculator
 {
    public static int Add(int a, int b) =>
@@ -81,14 +98,14 @@ public class Calculator
 
 var a = Calculator.Add(1,2);
 Console.WriteLine(a);
-
 #+END_SRC
 
 #+RESULTS:
 : 3
 
+
 ** Output as a table
-#+BEGIN_SRC csharp
+#+BEGIN_SRC csharp :exports both
 for (char  c = 'a'; c < 'd'; c++)
       System.Console.Write("{0} ",c);
     System.Console.WriteLine();
