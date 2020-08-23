@@ -72,8 +72,10 @@ of code to execute.
 
 * Prerequisites
 + dotnet core/5 installed (or any future versions that utilise the dotnet command)
-+ install dotnet-script
-``` dotnet tool install -g dotnet-script ```
++ Install dotnet-script
+ #+BEGIN_SRC sh
+ dotnet tool install -g dotnet-script
+ #+END_SRC
 + Make sure your .dotnet/tools directory is in your PATH variable (restart if needed)
 
 * Installation
