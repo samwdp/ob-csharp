@@ -1,5 +1,6 @@
 #+TITLE: ob-csharp
 #+DATE:    August 22, 2020
+#+Author: Sam Precious
 
 * Table of Contents :TOC_3:noexport:
 - [[#description][Description]]
@@ -10,12 +11,20 @@
 - [[#features][Features]]
   - [[#basic-hello-world][Basic Hello World]]
   - [[#creating-classes][Creating classes]]
+  - [[#quick-mvc][Quick MVC]]
   - [[#output-as-a-table][Output as a table]]
 
 * Description
-This is a small org-babel plugin that utilises dotnet to execute c# block
+This is a small org-babel plugin that utilises dotnet-script to execute c# block
+
+The idea for this came about after reading Scott Hanselman's blog post about
+dotnet-script. I have been using a tool called LinqPad as part of my workflow to test
+code out but in my effort to never leave Emacs I wanted a LinqPad ish experiance in
+Org. This way I can use the scripting extension of Dotnet to create little blocks
+of code to execute.
 
 + @samwdp (Author)
++ @bernhardrichter & @filip_woj ([dotnet script](https://github.com/filipw/dotnet-script))
 
 ** Code
 #+BEGIN_SRC emacs-lisp :tangle ob-csharp.el
@@ -64,9 +73,8 @@ This is a small org-babel plugin that utilises dotnet to execute c# block
 * Prerequisites
 + dotnet core/5 installed (or any future versions that utilise the dotnet command)
 + install dotnet-script
- #+BEGIN_SRC powershell
-dotnet tool install -g dotnet-script
- #+END_SRC
+``` dotnet tool install -g dotnet-script ```
++ Make sure your .dotnet/tools directory is in your PATH variable (restart if needed)
 
 * Installation
 ** Doom Emacs (my preffered distribution)
@@ -96,12 +104,45 @@ public class Calculator
        a + b;
 }
 
-var a = Calculator.Add(1,2);
-Console.WriteLine(a);
+Console.WriteLine(Calculator.Add(1, 2));
 #+END_SRC
 
 #+RESULTS:
 : 3
+
+** Quick MVC
+#+BEGIN_SRC csharp :exports both
+public class ExampleController
+{
+    public void Render(ExampleModel obj)
+    {
+        Console.WriteLine(obj.ToString());
+    }
+}
+
+public class ExampleModel
+{
+
+    public string Name {get; set;}
+
+    public override string ToString()
+    {
+        return Name;
+    }
+}
+
+var model = new ExampleModel()
+{
+    Name = "Hello World"
+};
+
+var controller = new ExampleController();
+
+controller.Render(model);
+#+END_SRC
+
+#+RESULTS:
+: Hello World
 
 
 ** Output as a table
