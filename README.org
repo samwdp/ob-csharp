@@ -24,7 +24,7 @@ Org. This way I can use the scripting extension of Dotnet to create little block
 of code to execute.
 
 + @samwdp (Author)
-+ @bernhardrichter & @filip_woj ([[github:filipw/dotnet-script][dotnet-script]])
++ @bernhardrichter & @filip_woj ([[https://github.com/filipw/dotnet-script][dotnet-script]])
 
 ** Code
 #+BEGIN_SRC emacs-lisp :tangle ob-csharp.el
