@@ -19,7 +19,7 @@
 
 (defun org-babel-execute:csharp (body params)
   (let* ((processed-params (org-babel-process-params params))
-         (src-temp (org-babel-temp-file "csharp-src-")))
+         (src-temp (org-babel-temp-file "csharp-src-" ".csx")))
     (with-temp-file src-temp (insert body))
     (let ((results (org-babel-eval (ob-csharp--build-script-run-command src-temp) "")))
       (org-babel-reassemble-table
